@@ -384,20 +384,15 @@ const handleHttpRequest = async (runtime: LxRuntime, reqData: RequestParams) => 
 		const response = await fetch(url, fetchOptions)
 
 		let body: any
-		const contentType = response.headers.get('content-type') || ''
 		if (options.binary) {
 			// 二进制响应 — 转为 base64
 			const buffer = await response.arrayBuffer()
 			body = Buffer.from(buffer).toString('base64')
 		} else {
 			const text = await response.text()
-			if (contentType.includes('json')) {
-				try {
-					body = JSON.parse(text)
-				} catch {
-					body = text
-				}
-			} else {
+			try {
+				body = JSON.parse(text)
+			} catch {
 				body = text
 			}
 		}
